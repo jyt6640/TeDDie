@@ -19,10 +19,12 @@ public class TeDDieController {
             Map<String, String> argMap = parseArgs(args);
             String topic = argMap.get("--topic");
             String difficulty = argMap.get("--difficulty");
+
             String missionResult = missionService.generateMission(topic, difficulty);
+
             outputView.printMission(missionResult);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            outputView.printError(e.getMessage());
         }
 
     }
