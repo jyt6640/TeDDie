@@ -81,9 +81,9 @@ public class MissionServiceTest {
         String actualPrompt = promptCaptor.getValue();
 
         //then
-        assertThat(actualPrompt).isEqualTo("TDD 연습");
-        assertThat(actualPrompt).isEqualTo("Java");
-        assertThat(actualPrompt).isEqualTo("주제: collection");
-        assertThat(actualPrompt).isEqualTo("난이도: easy");
+        assertThat(actualPrompt).contains("TDD 연습");
+        assertThat(actualPrompt).contains("Java");
+        assertThat(actualPrompt).contains("주제: collection");
+        assertThat(actualPrompt).contains("난이도: easy");
     }
 }
