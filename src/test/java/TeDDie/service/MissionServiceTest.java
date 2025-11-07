@@ -77,10 +77,10 @@ public class MissionServiceTest {
 
         //when
         missionService.generateMission(topic, difficulty);
-        verify(mockRequestBody).createJSONBody(promptCaptor.capture());
         String actualPrompt = promptCaptor.getValue();
 
         //then
+        verify(mockRequestBody).createJSONBody(promptCaptor.capture());
         assertThat(actualPrompt).contains("TDD 연습");
         assertThat(actualPrompt).contains("Java");
         assertThat(actualPrompt).contains("주제: collection");
