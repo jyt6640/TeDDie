@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -83,5 +84,17 @@ public class HttpRequestSenderTest {
         assertThat(request.getMethod()).isEqualTo("POST");
         assertThat(request.getHeader("Content-Type")).isEqualTo("application/json");
         assertThat(request.getBody().readUtf8()).isEqualTo(input);
+    }
+
+    @DisplayName("연결할 수 없는 주소로 요청시 ConnectException 던짐")
+    @Test
+    void 연결할_수_없는_주소로_요청시_ConnectException을_던짐() {
+        //given
+        String url = "http://localhost:9000/test-path";
+        String input = "{}";
+
+        //when&then
+        assertThatThrownBy(() -> sender.post(url, input))
+                .isInstanceOf(ConnectException.class);
     }
 }
