@@ -77,4 +77,48 @@ public class RagClientTest {
         assertThat(ragResult.repo()).isEqualTo("java-racingcar-6");
         assertThat(ragResult.similarityScore()).isEqualTo(0.85);
     }
+
+    @DisplayName("검색 결과 여러 개를 파싱하여 반환")
+    @Test
+    void 검색_결과_여러_개를_파싱하여_반환() throws Exception {
+        //given
+        HttpRequestSender mockSender = mock(HttpRequestSender.class);
+        String responseJson = """
+            {
+                "query": "TDD",
+                "results": [
+                    {
+                        "repo": "java-racingcar-6",
+                        "text": "Text 1",
+                        "url": "https://url1.com",
+                        "similarity_score": 0.9
+                    },
+                    {
+                        "repo": "java-lotto-6",
+                        "text": "Text 2",
+                        "url": "https://url2.com",
+                        "similarity_score": 0.7
+                    },
+                    {
+                        "repo": "java-baseball-6",
+                        "text": "Text 3",
+                        "url": "https://url3.com",
+                        "similarity_score": 0.5
+                    }
+                ]
+            }
+            """;
+        when(mockSender.post(anyString(), anyString()))
+                .thenReturn(responseJson);
+        RagClient ragClient = new RagClient(mockSender);
+
+        //when
+        List<RagResult> results = ragClient.search("TDD", 3);
+
+        //then
+        assertThat(results.size()).isEqualTo(3);
+        assertThat(results.get(0).repo()).isEqualTo("java-racingcar-6");
+        assertThat(results.get(1).repo()).isEqualTo("java-lotto-6");
+        assertThat(results.get(2).repo()).isEqualTo("java-baseball-6");
+    }
 }
