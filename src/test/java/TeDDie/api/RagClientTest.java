@@ -1,8 +1,11 @@
 package TeDDie.api;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.google.gson.Gson;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,5 +21,28 @@ public class RagClientTest {
 
         //then
         assertThat(ragClient).isNotNull();
+    }
+
+    @DisplayName("빈 결과 리스트를 반환")
+    @Test
+    void 빈_결과_리스트를_반화() throws Exception {
+        //given
+        HttpRequestSender mockSender = mock(HttpRequestSender.class);
+        String responseJson = """
+            {
+                "query": "테스트용검색어",
+                "results": []
+            }
+            """;
+        when(mockSender.post(anyString(), anyString()))
+                .thenReturn(responseJson);
+        RagClient ragClient = new RagClient(mockSender);
+
+        //when
+        List<RagResult> results = ragClient.search("테스트용검색어", 3);
+
+        //then
+        assertThat(results).isNotNull();
+        assertThat(results.size()).isEqualTo(0);
     }
 }
