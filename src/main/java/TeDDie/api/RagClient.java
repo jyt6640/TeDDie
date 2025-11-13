@@ -18,15 +18,15 @@ public class RagClient {
     }
 
     public List<RagResult> search(String query, int topK) throws Exception {
-        String requestBody = buildSearchRequset(query, topK);
+        String requestBody = buildSearchRequest(query, topK);
         String responseJson = sender.post(RAG_API_URL, requestBody);
         return parseSearchResponse(responseJson);
     }
 
-    private String buildSearchRequset(String query, int topK) throws Exception {
+    private String buildSearchRequest(String query, int topK) throws Exception {
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("query", query);
-        requestBody.addProperty("topK", topK);
+        requestBody.addProperty("top_k", topK);
         return gson.toJson(requestBody);
     }
 

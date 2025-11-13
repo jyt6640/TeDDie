@@ -1,8 +1,11 @@
 package TeDDie.service;
 
 import TeDDie.api.HttpRequestSender;
+import TeDDie.api.RagClient;
+import TeDDie.api.RagResult;
 import TeDDie.api.RequestBodyBuilder;
 import com.google.gson.Gson;
+import java.util.List;
 
 public class MissionService {
     private static final String SYSTEM_PROMPT = """
@@ -70,15 +73,18 @@ public class MissionService {
 
     private final HttpRequestSender sender;
     private final RequestBodyBuilder builder;
+    private final RagClient ragClient;
     private final Gson gson;
 
-    public MissionService(HttpRequestSender sender, RequestBodyBuilder builder) {
+    public MissionService(HttpRequestSender sender, RequestBodyBuilder builder, RagClient ragClient) {
         this.sender = sender;
         this.builder = builder;
+        this.ragClient = ragClient;
         this.gson = new Gson();
     }
 
     public String generateMission(String topic, String difficulty) throws Exception {
+        List<RagResult> ragResults = ragClient.search(topic, 3);
         String userPrompt = String.format(USER_PROMPT_TEMPLATE, topic, difficulty);
         String requestJson = builder.createJSONBody(SYSTEM_PROMPT, userPrompt);
         String responseJson = sender.post("http://localhost:1234/v1/chat/completions", requestJson);
