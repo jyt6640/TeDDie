@@ -26,9 +26,10 @@ public class ProjectGeneratorTest {
     void 템플릿을_복사하여_프로젝트_생성() {
         //given
         String projectName = "java-lotto";
+        String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName);
 
         //then
         assertThat(Files.exists(projectPath)).isTrue();
@@ -43,9 +44,10 @@ public class ProjectGeneratorTest {
     void setting_gradle의_프로젝트명을_미션명으로_변경() throws IOException {
         //given
         String projectName = "java-lotto";
+        String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName);
 
         //then
         Path settingsGradle = projectPath.resolve("settings.gradle");
@@ -53,5 +55,26 @@ public class ProjectGeneratorTest {
 
         assertThat(content).contains("rootProject.name = 'java-lotto'");
         assertThat(content).doesNotContain("{{PROJECT_NAME}}");
+    }
+
+    @DisplayName("패키지 디렉토리를 생성하고 Application.java/ApplicationTest.java를 이동")
+    @Test
+    void 패키지_디렉토리를_생성하고_Application_java_ApplicationTest_java를_이동() {
+        //given
+        String projectName = "java-lotto";
+        String packageName = "lotto";
+
+        //when
+        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+
+        //then
+        Path mainPackage = projectPath.resolve("src/main/java" + packageName);
+        Path testPackage = projectPath.resolve("src/test/java" + packageName);
+
+        assertThat(Files.exists(mainPackage.resolve("Application.java"))).isTrue();
+        assertThat(Files.exists(testPackage.resolve("ApplicationTest.java"))).isTrue();
+
+        assertThat(Files.exists(projectPath.resolve("src/main/java/Application.java"))).isFalse();
+        assertThat(Files.exists(projectPath.resolve("src/test/java/ApplicationTest.java"))).isFalse();
     }
 }
