@@ -14,6 +14,7 @@ public class ProjectGenerator {
         try {
             Files.createDirectories(projectPath);
             copyTemplate(projectPath);
+            replaceProjectName(projectPath, projectName);
         } catch (IOException e) {
             throw new RuntimeException("[ERROR] 프로젝트 생성 실패: " + e.getMessage(), e);
         }
@@ -46,5 +47,12 @@ public class ProjectGenerator {
         } catch (Exception e) {
             throw new RuntimeException("[ERROR] 템플릿 경로를 찾을 수 없습니다: " + e.getMessage(), e);
         }
+    }
+
+    private void replaceProjectName(Path projectrPath, String projectName) throws IOException {
+        Path settingsGradle = projectrPath.resolve("settings.gradle");
+        String content = Files.readString(settingsGradle);
+        String replaced = content.replace("{{PROJECT_NAME}}", projectName);
+        Files.writeString(settingsGradle, replaced);
     }
 }
