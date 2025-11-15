@@ -68,8 +68,8 @@ public class ProjectGeneratorTest {
         Path projectPath = generator.createProject(tempDir, projectName, packageName);
 
         //then
-        Path mainPackage = projectPath.resolve("src/main/java" + packageName);
-        Path testPackage = projectPath.resolve("src/test/java" + packageName);
+        Path mainPackage = projectPath.resolve("src/main/java/" + packageName);
+        Path testPackage = projectPath.resolve("src/test/java/" + packageName);
 
         assertThat(Files.exists(mainPackage.resolve("Application.java"))).isTrue();
         assertThat(Files.exists(testPackage.resolve("ApplicationTest.java"))).isTrue();
