@@ -23,7 +23,7 @@ public class ApiResponseTest {
         assertThat(content).isEqualTo("미션 내용");
     }
 
-    @DisplayName("choice가 비어있으면 예외 발생")
+    @DisplayName("Choice가 비어있으면 예외 발생")
     @Test
     void choice가_비어있으면_예외_발생() {
         //given
@@ -34,5 +34,15 @@ public class ApiResponseTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]")
                 .hasMessageContaining("choice");
+    }
+
+    @DisplayName("Message가 비어있으면 예외 발생")
+    @Test
+    void Message가_비어있으면_예외_발생() {
+        //when&then
+        assertThatThrownBy(() -> new Choice(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR]")
+                .hasMessageContaining("message");
     }
 }
