@@ -29,7 +29,7 @@ public class ProjectGeneratorTest {
         String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, "");
 
         //then
         assertThat(Files.exists(projectPath)).isTrue();
@@ -47,7 +47,7 @@ public class ProjectGeneratorTest {
         String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, "");
 
         //then
         Path settingsGradle = projectPath.resolve("settings.gradle");
@@ -65,7 +65,7 @@ public class ProjectGeneratorTest {
         String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, "");
 
         //then
         Path mainPackage = projectPath.resolve("src/main/java/" + packageName);
@@ -86,7 +86,7 @@ public class ProjectGeneratorTest {
         String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, "");
 
         //then
         Path applicationJava =  projectPath.resolve("src/main/java/" + packageName + "/Application.java");
@@ -103,12 +103,31 @@ public class ProjectGeneratorTest {
         String packageName = "lotto";
 
         //when
-        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, "");
 
         //then
         Path applicationTestJava =  projectPath.resolve("src/test/java/" + packageName + "/ApplicationTest.java");
         String content = Files.readString(applicationTestJava);
 
         assertThat(content).startsWith("package " + packageName + ";");
+    }
+
+    @DisplayName("README.md 파일을 생성하고 미션 내용을 작성")
+    @Test
+    void README_md_파일을_생성하고_미션_내용을_작성한다() throws IOException {
+        //given
+        String projectName = "java-lotto";
+        String packageName = "lotto";
+        String readMeContent = "# 로또 미션\n\n## 기능 요구사항\n- 로또 번호 생성";
+
+        //when
+        Path projectPath = generator.createProject(tempDir, projectName, packageName, readMeContent);
+
+        //then
+        Path readme = projectPath.resolve("README.md");
+        assertThat(Files.exists(readme)).isTrue();
+
+        String content = Files.readString(readme);
+        assertThat(content).isEqualTo(readMeContent);
     }
 }
