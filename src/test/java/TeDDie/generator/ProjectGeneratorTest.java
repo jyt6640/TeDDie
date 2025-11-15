@@ -77,4 +77,38 @@ public class ProjectGeneratorTest {
         assertThat(Files.exists(projectPath.resolve("src/main/java/Application.java"))).isFalse();
         assertThat(Files.exists(projectPath.resolve("src/test/java/ApplicationTest.java"))).isFalse();
     }
+
+    @DisplayName("Application.java에 package 문을 추가")
+    @Test
+    void Application_java에_package_문을_추가() throws IOException {
+        //given
+        String projectName = "java-lotto";
+        String packageName = "lotto";
+
+        //when
+        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+
+        //then
+        Path applicationJava =  projectPath.resolve("src/main/java/" + packageName + "/Application.java");
+        String content = Files.readString(applicationJava);
+
+        assertThat(content).startsWith("package " + packageName + ";");
+    }
+
+    @DisplayName("ApplicationTest.java에 package 문을 추가")
+    @Test
+    void ApplicationTest_java에_package_문을_추가() throws IOException {
+        //given
+        String projectName = "java-lotto";
+        String packageName = "lotto";
+
+        //when
+        Path projectPath = generator.createProject(tempDir, projectName, packageName);
+
+        //then
+        Path applicationTestJava =  projectPath.resolve("src/test/java/" + packageName + "/ApplicationTest.java");
+        String content = Files.readString(applicationTestJava);
+
+        assertThat(content).startsWith("package " + packageName + ";");
+    }
 }
