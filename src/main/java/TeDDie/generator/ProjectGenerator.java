@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public class ProjectGenerator {
     private static final String TEMPLATE_PATH = "/template";
 
-    public Path createProject(Path baseDir, String projectName, String packageName) {
+    public Path createProject(Path baseDir, String projectName, String packageName, String readmeContent) {
         Path projectPath = baseDir.resolve(projectName);
         try {
             Files.createDirectories(projectPath);
@@ -17,6 +17,7 @@ public class ProjectGenerator {
             replaceProjectName(projectPath, projectName);
             moveFilesToPackage(projectPath, packageName);
             replacePackageState(projectPath, packageName);
+            createReadme(projectPath, readmeContent);
         } catch (IOException e) {
             throw new RuntimeException("[ERROR] 프로젝트 생성 실패: " + e.getMessage(), e);
         }
@@ -94,8 +95,13 @@ public class ProjectGenerator {
     private void replacePackageName(Path projectPath, String filePath, String packageName) throws IOException {
         Path targetPath = projectPath.resolve(filePath);
         String content = Files.readString(targetPath);
-        String packageStatement = "package " + packageName + ";\n\n";  // \n\n 추가!
+        String packageStatement = "package " + packageName + ";\n\n";
         String newContent = packageStatement + content;
         Files.writeString(targetPath, newContent);
+    }
+
+    private void createReadme(Path projectPath, String missionContent) throws IOException {
+        Path readme = projectPath.resolve("README.md");
+        Files.writeString(readme, missionContent);
     }
 }
