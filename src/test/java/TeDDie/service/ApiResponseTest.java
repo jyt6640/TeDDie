@@ -1,6 +1,7 @@
 package TeDDie.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -20,5 +21,18 @@ public class ApiResponseTest {
 
         //then
         assertThat(content).isEqualTo("미션 내용");
+    }
+
+    @DisplayName("choice가 비어있으면 예외 발생")
+    @Test
+    void choice가_비어있으면_예외_발생() {
+        //given
+        ApiResponse response = new ApiResponse(List.of());
+
+        //when&then
+        assertThatThrownBy(response::extractResponse)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR]")
+                .hasMessageContaining("choice");
     }
 }
