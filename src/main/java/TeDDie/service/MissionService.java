@@ -93,6 +93,6 @@ public class MissionService {
 
     public String parseContentFromResponse(String responseJson) {
         ApiResponse response = gson.fromJson(responseJson, ApiResponse.class);
-        return response.choices().get(0).message().content();
+        return response.extractResponse();
     }
 }
