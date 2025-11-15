@@ -9,12 +9,13 @@ import java.util.stream.Stream;
 public class ProjectGenerator {
     private static final String TEMPLATE_PATH = "/template";
 
-    public Path createProject(Path baseDir, String projectName) {
+    public Path createProject(Path baseDir, String projectName, String packageName) {
         Path projectPath = baseDir.resolve(projectName);
         try {
             Files.createDirectories(projectPath);
             copyTemplate(projectPath);
             replaceProjectName(projectPath, projectName);
+            moveFilesToPackage(projectPath, packageName);
         } catch (IOException e) {
             throw new RuntimeException("[ERROR] 프로젝트 생성 실패: " + e.getMessage(), e);
         }
@@ -54,5 +55,33 @@ public class ProjectGenerator {
         String content = Files.readString(settingsGradle);
         String replaced = content.replace("{{PROJECT_NAME}}", projectName);
         Files.writeString(settingsGradle, replaced);
+    }
+
+    private void moveFilesToPackage(Path projectPath, String packageName) throws IOException {
+        moveMainFiles(projectPath, packageName);
+        moveTestFiles(projectPath, packageName);
+    }
+
+    private void moveMainFiles(Path projectPath, String packageName) throws IOException {
+        Path mainPackage = createPackageDirectory(projectPath, "src/main/java", packageName);
+        moveFile(projectPath, "src/main/java/Application.java", mainPackage);
+    }
+
+    private void moveTestFiles(Path projectPath, String packageName) throws IOException {
+        Path testPackage = createPackageDirectory(projectPath, "src/test/java", packageName);
+        moveFile(projectPath, "src/test/java/ApplicationTest.java", testPackage);
+    }
+
+    private Path createPackageDirectory(Path projectPath, String basePath, String packageName) throws IOException {
+        Path packagePath = projectPath.resolve(basePath + "/" + packageName);
+        Files.createDirectories(packagePath);
+        return packagePath;
+    }
+
+    private void moveFile(Path projectPath, String sourcePath, Path targetPath) throws IOException {
+        Path source = projectPath.resolve(sourcePath);
+        Path fileName = source.getFileName();
+        Path destination = targetPath.resolve(fileName);
+        Files.move(source, destination);
     }
 }
