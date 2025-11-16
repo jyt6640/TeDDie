@@ -1,5 +1,8 @@
 package TeDDie.controller;
 
+import TeDDie.domain.CommandLineArgs;
+import TeDDie.domain.Difficulty;
+import TeDDie.domain.Topic;
 import TeDDie.generator.ProjectGenerator;
 import TeDDie.service.MissionService;
 import TeDDie.view.OutputView;
@@ -21,15 +24,15 @@ public class TeDDieController {
 
     public void run(String args[]) {
         try {
-            Map<String, String> argMap = parseArgs(args);
-            String topic = argMap.get("--topic");
-            String difficulty = argMap.get("--difficulty");
+            CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+            Topic topic = new Topic(commandLineArgs.getTopic());
+            Difficulty difficulty = Difficulty.from(commandLineArgs.getDifficulty());
 
             String missionResult = missionService.generateMission(topic, difficulty);
 
             Path desktopPath = getDesktopPath();
             String projectName = "java-" + topic;
-            projectGenerator.createProject(desktopPath, projectName, topic, missionResult);
+            projectGenerator.createProject(desktopPath, projectName, topic.getValue(), missionResult);
 
             outputView.printMission(missionResult);
         } catch (Exception e) {
