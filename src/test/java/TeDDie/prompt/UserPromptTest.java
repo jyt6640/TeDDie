@@ -1,8 +1,10 @@
-package TeDDie.domain;
+package TeDDie.prompt;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
+import TeDDie.domain.Difficulty;
+import TeDDie.domain.Topic;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,7 @@
-package TeDDie.domain;
+package TeDDie.prompt;
+
+import TeDDie.domain.Difficulty;
+import TeDDie.domain.Topic;
 
 public class UserPrompt {
     private static final String TEMPLATE = """
