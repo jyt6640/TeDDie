@@ -3,6 +3,7 @@ package TeDDie.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,8 @@ import TeDDie.api.HttpRequestSender;
 import TeDDie.api.RagClient;
 import TeDDie.api.RagResult;
 import TeDDie.api.RequestBodyBuilder;
+import TeDDie.domain.Difficulty;
+import TeDDie.domain.Topic;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +40,8 @@ public class MissionServiceTest {
     @Test
     void API_응답을_파싱하여_실제_텍스트_반환() throws Exception {
         //given
-        String topic = "collection";
-        String difficulty = "easy";
+        Topic topic = new Topic("collection");
+        Difficulty difficulty = Difficulty.EASY;
         String testResponse = """
                 {
                     "choices": [
@@ -64,12 +67,12 @@ public class MissionServiceTest {
         assertThat(actualText).isEqualTo(result);
     }
 
-    @DisplayName("미션 생성 호출 시 system/user 프롬프트를 분리하여 전달")
+    @DisplayName("미션 생성 호출 시 system user 프롬프트를 분리하여 전달")
     @Test
     void 미션_생성_호출_시_올바른_프롬프트를_생성하여_전달() throws Exception {
         //given
-        String topic = "collection";
-        String difficulty = "easy";
+        Topic topic = new Topic("collection");
+        Difficulty difficulty = Difficulty.EASY;
         when(mockRequestBody.createJSONBody(anyString(), anyString()))
                 .thenReturn("{\"promt\":\"...\"}");
 
@@ -98,12 +101,12 @@ public class MissionServiceTest {
         assertThat(actualUserPrompt).contains("주제");
     }
 
-    @DisplayName("RAG 검색 결과를 시스템 프롬프트에 포함")
+    @DisplayName("RAG 검색 결과를 시스템 프롬프트에_포함")
     @Test
     void RAG_검색_결과를_시스템_프롬프트에_포함() throws Exception {
         //given
-        String topic = "자동차 경주";
-        String difficulty = "easy";
+        Topic topic = new Topic("자동차 경주");
+        Difficulty difficulty = Difficulty.EASY;
         List<RagResult> ragResults = List.of(
                 new RagResult(
                         "java-racingcar-6",
