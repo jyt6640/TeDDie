@@ -14,11 +14,19 @@ public enum Difficulty {
     }
 
     public static Difficulty from(String input) {
+        validateEmptyInput(input);
+
         return Arrays.stream(Difficulty.values())
                 .filter(difficulty -> difficulty.value.equals(input.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         "[ERROR] 유효하지 않은 난이도입니다."
                 ));
+    }
+
+    private static void validateEmptyInput(String input) {
+        if (input.isBlank()) {
+            throw new IllegalArgumentException("[ERROR] 난이도는 빈 문자열일 수 없습니다.");
+        }
     }
 }
