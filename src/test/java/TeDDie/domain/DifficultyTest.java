@@ -1,6 +1,7 @@
 package TeDDie.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,5 +44,29 @@ public class DifficultyTest {
 
         //then
         assertThat(difficulty).isEqualTo(Difficulty.HARD);
+    }
+
+    @DisplayName("유효하지 않은 값 입력 시 예외 발생")
+    @Test
+    void 유효하지_않은_값_입력_시_예외_발생() {
+        //given
+        String input = "veryHard";
+
+        //when&then
+        assertThatThrownBy(() -> Difficulty.from(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 유효하지 않은 난이도입니다.");
+    }
+
+    @DisplayName("빈 값 입력 시 예외 발생")
+    @Test
+    void 빈_값_입력_시_예외_발생() {
+        //given
+        String input = "";
+
+        //when&then
+        assertThatThrownBy(() -> Difficulty.from(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR] 난이도는 빈 문자열일 수 없습니다.");
     }
 }
