@@ -9,8 +9,6 @@ import java.nio.file.Path;
 
 public class TeDDieController {
     private static final String PROJECT_PREFIX = "java";
-    private static final String USER_HOME_PROPERTY = "user.home";
-    private static final String USER_DESKTOP = "Desktop";
 
     private final MissionService missionService;
     private final OutputView outputView;
@@ -44,13 +42,7 @@ public class TeDDieController {
     private void generateProject(CommandLineArgs commandLineArgs) {
         Topic topic = new Topic(commandLineArgs.getTopic());
 
-        Path desktopPath = getDesktopPath();
         String projectName = PROJECT_PREFIX + topic.getValue();
-        projectGeneratorController.createProject(desktopPath, projectName, topic.getValue(), projectName);
-    }
-
-    private Path getDesktopPath() {
-        String userHome = System.getProperty(USER_HOME_PROPERTY);
-        return Path.of(userHome, USER_DESKTOP);
+        projectGeneratorController.createProject(projectName, topic.getValue(), projectName);
     }
 }

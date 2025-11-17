@@ -12,9 +12,12 @@ public class ProjectWriter {
         this.readmeWriter = new ReadmeWriter();
     }
 
-    public void writeProject(Path projectPath, String projectName, String packageName, String missionContent) throws IOException {
+    public void writeProject(Path projectPath, String projectName, String packageName) throws IOException {
         fileReplacer.replaceProjectName(projectPath, projectName);
         fileReplacer.replacePackageState(projectPath, packageName);
+    }
+
+    public void writeREADME(Path projectPath, String missionContent) throws IOException {
         readmeWriter.createReadme(projectPath, missionContent);
     }
 }
