@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandLineArgs {
+    private static final String TOPIC_PREFIX = "--topic";
+    private static final String DIFFICULTY_PREFIX = "--difficulty";
+
     private final Map<String, String> args;
 
     public CommandLineArgs(String[] args) {
@@ -21,10 +24,10 @@ public class CommandLineArgs {
     }
 
     public String getTopic() {
-        return args.get("--topic");
+        return args.get(TOPIC_PREFIX);
     }
 
     public String getDifficulty() {
-        return args.get("--difficulty");
+        return args.get(DIFFICULTY_PREFIX);
     }
 }
