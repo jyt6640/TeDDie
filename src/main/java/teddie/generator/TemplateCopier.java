@@ -17,7 +17,9 @@ public class TemplateCopier {
     }
 
     private void copyFile(Path source, Path templatePath, Path targetPath) {
-        Path destination = targetPath.resolve(templatePath.relativize(source));
+        Path destination = targetPath.resolve(
+                templatePath.relativize(source)
+        );
         if (Files.isDirectory(source)) {
             createDirectories(destination);
             return;

@@ -23,7 +23,83 @@
 - [X] 로컬 LLM API 호출 (LM Studio)
 - [X] RAG API 연동 (우테코 과제 검색)
 - [X] 프로젝트 템플릿 자동 생성
-- [ ] 테스트 스켈레톤 생성 (계획 중)
+- [X] 테스트 스켈레톤 생성
+
+---
+
+## 📁 프로젝트 구조
+
+```
+src/main/java/teddie/
+ ├── Application.java
+ ├── api/
+ │   ├── ApiMessage.java
+ │   ├── ApiRequest.java
+ │   ├── HttpRequestSender.java
+ │   ├── RagClient.java
+ │   ├── RagResult.java
+ │   └── RequestBodyBuilder.java
+ ├── controller/
+ │   ├── ProjectGeneratorController.java
+ │   └── TeDDieController.java
+ ├── domain/
+ │   ├── CommandLineArgs.java
+ │   ├── Difficulty.java
+ │   └── Topic.java
+ ├── generator/
+ │   ├── FileReplacer.java
+ │   ├── PackageStructureBuilder.java
+ │   ├── ProjectWriter.java
+ │   ├── ReadmeWriter.java
+ │   └── TemplateCopier.java
+ ├── prompt/
+ │   ├── SystemPrompt.java
+ │   └── UserPrompt.java
+ ├── service/
+ │   ├── ApiResponse.java
+ │   └── MissionService.java
+ └── view/
+     ├── ConsoleView.java
+     └── OutputView.java
+```
+
+---
+
+## 🎯 상세 기능 구현 목록
+
+### 🔧 api/ - API 통신 계층
+- [X] **HttpRequestSender**: HTTP/1.1 POST 요청 전송
+- [X] **RequestBodyBuilder**: LLM API 요청 JSON 생성
+- [X] **RagClient**: RAG API 호출 및 결과 수신
+- [X] **ApiRequest/ApiMessage/RagResult**: 요청/응답 데이터 구조 (Record)
+
+### 🎮 controller/ - 흐름 제어 계층
+- [X] **TeDDieController**: CLI 인자 파싱 및 전체 흐름 제어
+- [X] **ProjectGeneratorController**: 프로젝트 생성 흐름 관리
+
+### 📦 domain/ - 도메인 객체 계층
+- [X] **CommandLineArgs**: CLI 인자 파싱 및 검증
+- [X] **Topic**: 문제 주제 원시값 포장
+- [X] **Difficulty**: 난이도 원시값 포장
+
+### 🏭 generator/ - 프로젝트 생성 계층
+- [X] **TemplateCopier**: 템플릿 디렉토리 복사
+- [X] **ProjectWriter**: 생성된 프로젝트 구조화
+- [X] **ReadmeWriter**: README.md 파일 생성
+- [X] **FileReplacer**: 파일 내용 치환
+- [X] **PackageStructureBuilder**: 패키지 구조 생성
+
+### 💬 prompt/ - 프롬프트 관리 계층
+- [X] **SystemPrompt**: LLM 시스템 프롬프트 관리
+- [X] **UserPrompt**: RAG 결과 기반 사용자 프롬프트 생성
+
+### ⚙️ service/ - 비즈니스 로직 계층
+- [X] **MissionService**: 미션 생성 핵심 로직
+- [X] **ApiResponse**: LLM 응답 파싱
+
+### 🖥️ view/ - 출력 계층
+- [X] **ConsoleView**: 콘솔 출력 담당
+- [X] **OutputView**: 출력 포맷팅
 
 ---
 
@@ -41,28 +117,47 @@
 - **FastAPI**: Java ↔ Python 브릿지
 
 ```
-┌──────────────────────────────────────────────┐
-│      teddie Application (Java 21 + TDD)     │
-│                                              │
-│  ┌──────────────┐      ┌──────────────────┐ │
-│  │ Controller   │ ───> │ MissionService   │ │
-│  │  (CLI 처리)   │      │   (핵심 로직)     │ │
-│  └──────────────┘      └──────────────────┘ │
-│         │                      │             │
-│         │                      ├─> RagClient
-│         │                      ├─> HttpRequestSender
-│         │                      └─> RequestBodyBuilder
-│         │                                    │
-│         └─> OutputView                      │
-│                                              │
-└──────────────────────────────────────────────┘
-         │                                     │
-         ▼                                     ▼
-┌──────────────────┐               ┌──────────────────┐
-│   LM Studio      │               │   RAG API        │
-│  (로컬 LLM)       │               │  (FastAPI)       │
-│   :1234          │               │   :8000          │
-└──────────────────┘               └──────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              teddie Application (Java 21 + TDD)             │
+│                                                             │
+│  ┌─────────────────┐        ┌───────────────────────────┐  │
+│  │   controller/   │        │        service/           │  │
+│  │ TeDDieController│──────> │     MissionService        │  │
+│  │ ProjectGenerator│        │      ApiResponse          │  │
+│  │   Controller    │        └───────────────────────────┘  │
+│  └─────────────────┘                    │                  │
+│          │                              │                  │
+│          │                    ┌─────────┴──────────┐       │
+│          │                    ▼                    ▼       │
+│          │           ┌──────────────┐    ┌──────────────┐  │
+│          │           │     api/     │    │   prompt/    │  │
+│          │           │  RagClient   │    │ SystemPrompt │  │
+│          │           │HttpRequest   │    │  UserPrompt  │  │
+│          │           │   Sender     │    └──────────────┘  │
+│          │           │RequestBody   │                      │
+│          │           │   Builder    │                      │
+│          │           └──────────────┘                      │
+│          │                                                  │
+│          ├───────────> generator/                          │
+│          │             TemplateCopier, ProjectWriter       │
+│          │             ReadmeWriter, FileReplacer          │
+│          │             PackageStructureBuilder             │
+│          │                                                  │
+│          └───> view/                                       │
+│                ConsoleView, OutputView                     │1
+│                                                             │
+│  ┌─────────────┐                                           │
+│  │   domain/   │  CommandLineArgs, Topic, Difficulty       │
+│  └─────────────┘                                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+                    │                           │
+                    ▼                           ▼
+          ┌──────────────────┐       ┌──────────────────┐
+          │   LM Studio      │       │    RAG API       │
+          │   (로컬 LLM)      │       │   (FastAPI)      │
+          │    :1234         │       │    :8000         │
+          └──────────────────┘       └──────────────────┘
 ```
 
 ### 주요 설계 결정
@@ -140,32 +235,9 @@ void API_응답을_파싱하여_실제_텍스트_반환() {
 - [X] Markdown 파일 저장
 - [X] 테스트 스켈레톤 생성
 
-### 🔨 리팩토링 중
-
-**우선순위 1: 디미터의 법칙 준수**
-- [X] ApiResponse에 extractContent() 메서드 추가
-- [X] 체이닝 호출 제거
-
-**우선순위 2: 원시값 포장**
-- [X] Topic 값 객체 생성
-- [X] Difficulty Enum 생성
-- [ ] Prompt 값 객체 생성
-
-**우선순위 3: 일급 컬렉션**
-- [ ] RagResults 일급 컬렉션 생성
-- [ ] formatAsContext() 메서드로 포맷팅 로직 이동
-
-**우선순위 4: 책임 분리**
-- [ ] PromptGenerator 클래스 분리
-- [ ] ResponseParser 클래스 분리
-- [ ] MissionService 책임 경량화
-
-**우선순위 5: 들여쓰기 개선**
-- [ ] TeDDieController.parseArgs() 메서드 분리
-
 ---
 
-## ✅ 우테코 코딩 컨벤션 체크리스트
+## ✅ 코딩 컨벤션 체크리스트
 
 ### 현재 상태
 
