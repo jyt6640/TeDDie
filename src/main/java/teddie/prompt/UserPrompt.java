@@ -9,6 +9,11 @@ public class UserPrompt {
     private static final String TEMPLATE = """
             - 주제: %s
             - 난이도: %s
+            
+            참고할 우테코 과제 예시
+            %s
+            
+            위 예시를 참고하여 비슷한 스타일의 TDD 연습 문제를 생성해주세요.
             """;
 
     private final String content;
@@ -18,8 +23,20 @@ public class UserPrompt {
                 TEMPLATE,
                 topic.getValue(),
                 difficulty.getValue(),
-                ragResult
+                buildRagContext(ragResult)
         );
+    }
+
+    private String buildRagContext(List<RagResult> ragResults) {
+        if (ragResults.isEmpty()) {
+            return "(참고 자료 없음)";
+        }
+
+        StringBuilder ragResult = new StringBuilder();
+        for (int i = 0; i < ragResults.size(); i++) {
+            ragResult.append(ragResults.get(i).buildFormat(i + 1));
+        }
+        return ragResult.toString();
     }
 
     public String getContent() {
