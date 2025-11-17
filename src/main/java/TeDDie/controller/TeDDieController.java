@@ -3,13 +3,9 @@ package TeDDie.controller;
 import TeDDie.domain.CommandLineArgs;
 import TeDDie.domain.Difficulty;
 import TeDDie.domain.Topic;
-import TeDDie.generator.ProjectGenerator;
 import TeDDie.service.MissionService;
 import TeDDie.view.OutputView;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TeDDieController {
     private static final String PROJECT_PREFIX = "java";
@@ -18,12 +14,12 @@ public class TeDDieController {
 
     private final MissionService missionService;
     private final OutputView outputView;
-    private final ProjectGenerator projectGenerator;
+    private final ProjectGeneratorController projectGeneratorController;
 
-    public TeDDieController(MissionService missionService, OutputView outputView, ProjectGenerator projectGenerator) {
+    public TeDDieController(MissionService missionService, OutputView outputView, ProjectGeneratorController projectGeneratorController) {
         this.missionService = missionService;
         this.outputView = outputView;
-        this.projectGenerator = projectGenerator;
+        this.projectGeneratorController = projectGeneratorController;
     }
 
     public void run(String args[]) {
@@ -50,7 +46,7 @@ public class TeDDieController {
 
         Path desktopPath = getDesktopPath();
         String projectName = PROJECT_PREFIX + topic.getValue();
-        projectGenerator.createProject(desktopPath, projectName, topic.getValue(), projectName);
+        projectGeneratorController.createProject(desktopPath, projectName, topic.getValue(), projectName);
     }
 
     private Path getDesktopPath() {

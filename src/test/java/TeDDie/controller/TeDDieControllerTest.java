@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.*;
 
 import TeDDie.domain.Difficulty;
 import TeDDie.domain.Topic;
-import TeDDie.generator.ProjectGenerator;
 import TeDDie.service.MissionService;
 import TeDDie.view.OutputView;
 import java.nio.file.Path;
@@ -26,7 +25,7 @@ public class TeDDieControllerTest {
     private OutputView mockView;
 
     @Mock
-    private ProjectGenerator mockProjectGenerator;
+    private ProjectGeneratorController mockProjectGeneratorController;
 
     @InjectMocks
     private TeDDieController controller;
@@ -77,7 +76,7 @@ public class TeDDieControllerTest {
         controller.run(args);
 
         //then
-        verify(mockProjectGenerator).createProject(
+        verify(mockProjectGeneratorController).createProject(
                 any(Path.class),
                 anyString(),
                 eq("collection"),
