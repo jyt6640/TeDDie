@@ -7,7 +7,7 @@ import teddie.service.MissionService;
 import teddie.view.OutputView;
 
 public class TeDDieController {
-    private static final String PROJECT_PREFIX = "java";
+    private static final String PROJECT_PREFIX = "java-";
 
     private final MissionService missionService;
     private final OutputView outputView;
