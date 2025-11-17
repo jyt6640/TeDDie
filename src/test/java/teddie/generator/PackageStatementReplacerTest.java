@@ -13,23 +13,6 @@ public class PackageStatementReplacerTest {
     @TempDir
     Path tempDir;
 
-    @DisplayName("setting.gradle의 프로젝트명을 미션명으로 변경")
-    @Test
-    void setting_gradle의_프로젝트명을_미션명으로_변경() throws IOException {
-        //given
-        PackageStatementReplacer replacer = new PackageStatementReplacer();
-        Path settingsGradle = tempDir.resolve("settings.gradle");
-        Files.writeString(settingsGradle, "rootProject.name = '{{PROJECT_NAME}}'");
-
-        //when
-        replacer.replaceGradleProjectName(tempDir, "java-lotto");
-
-        //then
-        String content = Files.readString(settingsGradle);
-        assertThat(content).contains("rootProject.name = 'java-lotto'");
-        assertThat(content).doesNotContain("{{PROJECT_NAME}}");
-    }
-
     @DisplayName("Application/ApplicationTest.java에 package 문을 추가")
     @Test
     void Application_ApplicationTest_java에_package_문을_추가() throws IOException {

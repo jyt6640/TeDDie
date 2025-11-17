@@ -6,6 +6,7 @@ import teddie.generator.PackageStatementReplacer;
 import teddie.generator.PackageStructureBuilder;
 import teddie.generator.ProjectWriter;
 import teddie.generator.ReadmeWriter;
+import teddie.generator.SettingsGradleReplacer;
 import teddie.generator.TemplateCopier;
 import teddie.service.MissionService;
 import teddie.view.ConsoleView;
@@ -44,7 +45,11 @@ public class AppConfig {
     }
 
     public ProjectWriter projectWriter() {
-        return new ProjectWriter(fileReplacer(), readmeWriter());
+        return new ProjectWriter(fileReplacer(), readmeWriter(), settingsGradleReplacer());
+    }
+
+    public SettingsGradleReplacer settingsGradleReplacer() {
+        return new SettingsGradleReplacer();
     }
 
     public TemplateCopier templateCopier() {
