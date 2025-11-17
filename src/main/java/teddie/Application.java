@@ -1,8 +1,8 @@
 package teddie;
 
-import teddie.api.HttpRequestSender;
+import teddie.util.HttpRequestSender;
 import teddie.api.RagClient;
-import teddie.api.RequestBodyBuilder;
+import teddie.service.RequestBodyBuilder;
 import teddie.controller.TeDDieController;
 import teddie.controller.ProjectGeneratorController;
 import teddie.service.MissionService;

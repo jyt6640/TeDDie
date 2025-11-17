@@ -14,25 +14,3 @@ record ApiResponse(List<Choice> choices) {
         }
     }
 }
-
-record Choice(Message message) {
-    Choice {
-        validateEmpty(message);
-    }
-
-    private void validateEmpty(Message message) {
-        if (message == null) {
-            throw new IllegalArgumentException("[ERROR] API 응답에 message가 없습니다.");
-        }
-    }
-
-    String extractMessage() {
-        return message.extractContent();
-    }
-}
-
-record Message(String content) {
-    String extractContent() {
-        return content;
-    }
-}

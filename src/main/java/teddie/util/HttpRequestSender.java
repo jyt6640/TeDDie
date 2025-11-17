@@ -1,4 +1,4 @@
-package teddie.api;
+package teddie.util;
 
 import java.net.URI;
 import java.net.http.HttpClient;

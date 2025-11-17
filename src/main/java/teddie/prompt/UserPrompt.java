@@ -1,6 +1,6 @@
 package teddie.prompt;
 
-import teddie.api.RagResult;
+import teddie.api.dto.RagResult;
 import teddie.domain.Difficulty;
 import teddie.domain.Topic;
 import java.util.List;

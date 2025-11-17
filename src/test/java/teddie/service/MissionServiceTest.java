@@ -7,10 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import teddie.api.HttpRequestSender;
+import teddie.util.HttpRequestSender;
 import teddie.api.RagClient;
-import teddie.api.RagResult;
-import teddie.api.RequestBodyBuilder;
+import teddie.api.dto.RagResult;
 import teddie.domain.Difficulty;
 import teddie.domain.Topic;
 import java.util.List;

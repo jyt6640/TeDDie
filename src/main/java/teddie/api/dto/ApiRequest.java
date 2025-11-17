@@ -1,4 +1,4 @@
-package teddie.api;
+package teddie.api.dto;
 
 import java.util.List;
 

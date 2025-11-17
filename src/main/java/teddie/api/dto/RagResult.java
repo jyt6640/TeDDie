@@ -1,4 +1,4 @@
-package teddie.api;
+package teddie.api.dto;
 
 public record RagResult(
         String repo,

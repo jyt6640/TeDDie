@@ -1,7 +1,9 @@
-package teddie.api;
+package teddie.service;
 
 import com.google.gson.Gson;
 import java.util.List;
+import teddie.api.dto.ApiMessage;
+import teddie.api.dto.ApiRequest;
 
 public class RequestBodyBuilder {
     private static final String DEFAULT_MODEL = "a.x-4.0-light";

@@ -3,7 +3,7 @@ package teddie.prompt;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
-import teddie.api.RagResult;
+import teddie.api.dto.RagResult;
 import teddie.domain.Difficulty;
 import teddie.domain.Topic;
 import java.util.List;

@@ -1,4 +1,4 @@
-package teddie.api;
+package teddie.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import teddie.api.dto.ApiMessage;
+import teddie.api.dto.ApiRequest;
 
 public class RequestBodyBuilderTest {
     private RequestBodyBuilder builder;
