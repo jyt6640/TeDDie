@@ -28,8 +28,10 @@ public class TeDDieController {
 
     public void run(String args[]) {
         try {
-            String missionResult = generateMission(args);
-            generateProject(args);
+            CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+
+            String missionResult = generateMission(commandLineArgs);
+            generateProject(commandLineArgs);
             outputView.printMission(missionResult);
         } catch (Exception e) {
             outputView.printError(e.getMessage());
@@ -37,15 +39,13 @@ public class TeDDieController {
 
     }
 
-    private String generateMission(String[] args) throws Exception {
-        CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+    private String generateMission(CommandLineArgs commandLineArgs) throws Exception {
         Topic topic = new Topic(commandLineArgs.getTopic());
         Difficulty difficulty = Difficulty.from(commandLineArgs.getDifficulty());
         return missionService.generateMission(topic, difficulty);
     }
 
-    private void generateProject(String[] args) {
-        CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+    private void generateProject(CommandLineArgs commandLineArgs) {
         Topic topic = new Topic(commandLineArgs.getTopic());
 
         Path desktopPath = getDesktopPath();
