@@ -7,6 +7,9 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 public class HttpRequestSender {
+    private static final String HEADER_CONTENT_TYPE = "Content-Type";
+    private static final String HEADER_APPLICATION_JSON = "application/json";
+
     private final HttpClient httpClient;
 
     public HttpRequestSender() {
@@ -19,7 +22,7 @@ public class HttpRequestSender {
     public String post(String url, String requestBody) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Content-Type", "application/json")
+                .header(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON)
                 .POST(HttpRequest
                         .BodyPublishers
                         .ofString(requestBody))
@@ -37,7 +40,7 @@ public class HttpRequestSender {
         int statusCode = response.statusCode();
 
         if(statusCode < 200 || statusCode >= 300) {
-            throw new RuntimeException("HTTP Error Status: " + statusCode);
+            throw new RuntimeException("[ERROR] HTTP 에러 상태: " + statusCode);
         }
     }
 }

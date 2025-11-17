@@ -8,6 +8,13 @@ import java.util.List;
 
 public class RagClient {
     private static final String RAG_API_URL = "http://localhost:8000/api/search";
+    private static final String QUERY = "query";
+    private static final String TOP_K = "top_k";
+    private static final String RESULTS = "results";
+    private static final String REPO =  "repo";
+    private static final String TEXT = "text";
+    private static final String URL = "url";
+    private static final String SIMILARITY_SCORE = "similarity_score";
 
     private final HttpRequestSender sender;
     private final Gson gson;
@@ -25,23 +32,23 @@ public class RagClient {
 
     private String buildSearchRequest(String query, int topK) throws Exception {
         JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("query", query);
-        requestBody.addProperty("top_k", topK);
+        requestBody.addProperty(QUERY, query);
+        requestBody.addProperty(TOP_K, topK);
         return gson.toJson(requestBody);
     }
 
     private List<RagResult> parseSearchResponse(String responseJson) throws Exception {
         JsonObject response = gson.fromJson(responseJson, JsonObject.class);
-        JsonArray results = response.getAsJsonArray("results");
+        JsonArray results = response.getAsJsonArray(RESULTS);
 
         List<RagResult> ragResults = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
             JsonObject item = results.get(i).getAsJsonObject();
             ragResults.add(new RagResult(
-                    item.get("repo").getAsString(),
-                    item.get("text").getAsString(),
-                    item.get("url").getAsString(),
-                    item.get("similarity_score").getAsDouble()
+                    item.get(REPO).getAsString(),
+                    item.get(TEXT).getAsString(),
+                    item.get(URL).getAsString(),
+                    item.get(SIMILARITY_SCORE).getAsDouble()
             ));
         }
         return ragResults;
