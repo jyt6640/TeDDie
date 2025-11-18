@@ -8,7 +8,6 @@ import teddie.domain.Difficulty;
 import teddie.domain.Topic;
 import teddie.service.MissionService;
 import teddie.view.OutputView;
-import java.nio.file.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

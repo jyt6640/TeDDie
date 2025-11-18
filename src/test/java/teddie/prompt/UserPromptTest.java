@@ -1,4 +1,3 @@
-// src/test/java/teddie/prompt/UserPromptTest.java
 package teddie.prompt;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
