@@ -3,7 +3,6 @@ package teddie.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,9 +34,9 @@ public class MissionServiceTest {
     @InjectMocks
     private MissionService missionService;
 
-    @DisplayName("API 응답을 파싱하여 실제 텍스트 반환")
+    @DisplayName("API 응답을 파싱하여 MissionResponse 반환")
     @Test
-    void API_응답을_파싱하여_실제_텍스트_반환() {
+    void API_응답을_파싱하여_MissionResponse_반환() {
         //given
         Topic topic = new Topic("collection");
         Difficulty difficulty = Difficulty.EASY;
@@ -52,7 +51,6 @@ public class MissionServiceTest {
                     ]
                 }
                 """;
-        String result = "## 미션: 문자열 계산기";
 
         //when
         when(mockRequestBody.createJSONBody(anyString(), anyString()))
@@ -60,10 +58,10 @@ public class MissionServiceTest {
         when(mockSender.post(anyString(), anyString()))
                 .thenReturn(testResponse);
 
-        String actualText = missionService.generateMission(topic, difficulty);
+        MissionResponse response = missionService.generateMission(topic, difficulty);
 
         //then
-        assertThat(actualText).isEqualTo(result);
+        assertThat(response.mission()).isEqualTo("## 미션: 문자열 계산기");
     }
 
     @DisplayName("미션 생성 호출 시 system user 프롬프트를 분리하여 전달")
@@ -138,5 +136,42 @@ public class MissionServiceTest {
         String systemPrompt = systemPromptCaptor.getValue();
         assertThat(systemPrompt).contains("TDD");
         assertThat(systemPrompt).contains("TeDDie");
+    }
+
+    @DisplayName("테스트 케이스 포함된 미션 파싱")
+    @Test
+    void 테스트_케이스_포함된_미션_파싱() {
+        //given
+        Topic topic = new Topic("lotto");
+        Difficulty difficulty = Difficulty.EASY;
+        String testResponse = """
+                {
+                    "choices": [{
+                        "message": {
+                            "content": "# 🧩 로또\\n\\n## 기능 요구사항\\n- 로또 생성\\n\\n## 테스트 케이스\\n\\n### 기능 테스트\\n- 입력: 1000\\\\n\\n- 출력: [8, 21, 23]\\n\\n### 예외 테스트\\n- 입력: 500\\\\n"
+                        }
+                    }]
+                }
+                """;
+
+        when(mockRagClient.search(anyString(), anyInt())).thenReturn(List.of());
+        when(mockRequestBody.createJSONBody(anyString(), anyString())).thenReturn("{\"prompt\":\"...\"}");
+        when(mockSender.post(anyString(), anyString())).thenReturn(testResponse);
+
+        //when
+        MissionResponse response = missionService.generateMission(topic, difficulty);
+
+        //then
+        assertThat(response.mission()).contains("# 🧩 로또");
+        assertThat(response.mission()).doesNotContain("## 테스트 케이스");
+        assertThat(response.testCases().size()).isEqualTo(2);
+
+        TestCase functionalTest = response.testCases().get(0);
+        assertThat(functionalTest.name()).isEqualTo("기능_테스트");
+        assertThat(functionalTest.expectError()).isFalse();
+
+        TestCase exceptionTest = response.testCases().get(1);
+        assertThat(exceptionTest.name()).isEqualTo("예외_테스트");
+        assertThat(exceptionTest.expectError()).isTrue();
     }
 }

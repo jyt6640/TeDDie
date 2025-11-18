@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 import teddie.domain.Difficulty;
 import teddie.domain.Topic;
+import teddie.service.MissionResponse;
 import teddie.service.MissionService;
 import teddie.view.OutputView;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class TeDDieControllerTest {
@@ -34,16 +37,16 @@ public class TeDDieControllerTest {
     void CLI_인자를_파싱하여_Service와_View를_올바르게_호출() {
         //given
         String[] args = {"--topic", "collection", "--difficulty", "easy"};
-        String missionResult = "## 미션";
+        MissionResponse missionResponse = new MissionResponse("## 미션", List.of());
         when(mockService.generateMission(any(Topic.class), any(Difficulty.class)))
-                .thenReturn(missionResult);
+                .thenReturn(missionResponse);
 
         //when
         controller.run(args);
 
         //then
         verify(mockService).generateMission(any(Topic.class), any(Difficulty.class));
-        verify(mockView).printMission(missionResult);
+        verify(mockView).printMission("## 미션");
     }
 
     @DisplayName("Service에서 예외 발생 시 View의 printError를_호출")
@@ -67,9 +70,9 @@ public class TeDDieControllerTest {
     void 미션_생성_후_바탕화면에_프로젝트_생성() {
         //given
         String[] args = {"--topic", "collection", "--difficulty", "easy"};
-        String missionResult = "java-collection";
+        MissionResponse missionResponse = new MissionResponse("## 미션 내용", List.of());
         when(mockService.generateMission(any(Topic.class), any(Difficulty.class)))
-                .thenReturn(missionResult);
+                .thenReturn(missionResponse);
 
         //when
         controller.run(args);
@@ -78,8 +81,7 @@ public class TeDDieControllerTest {
         verify(mockProjectGeneratorController).createProject(
                 anyString(),
                 eq("collection"),
-                eq(missionResult)
+                eq("## 미션 내용")
         );
-
     }
 }
