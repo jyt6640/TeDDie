@@ -68,28 +68,44 @@ public class MissionService {
 
     private TestCase extractFunctionalTest(String testSection) {
         Pattern pattern = Pattern.compile(
-                "### 기능 테스트\\s*-\\s*입력:\\s*(.+?)\\s*-\\s*출력:\\s*(.+?)(?=##|$)",
-                Pattern.DOTALL
+                "(###?\\s*기능\\s*테스트|기능 테스트)\\s*-\\s*입력[:\\s]*(.+?)\\s*-\\s*출력[:\\s]*(.+?)(?=(###?|$))",
+                Pattern.DOTALL | Pattern.CASE_INSENSITIVE
         );
         Matcher matcher = pattern.matcher(testSection);
         if (matcher.find()) {
-            String input = matcher.group(1).trim();
-            String output = matcher.group(2).trim();
+            String input = cleanTestValue(matcher.group(2).trim());
+            String output = cleanTestValue(matcher.group(3).trim());
             return new TestCase("기능_테스트", "기능 테스트", input, output, false);
         }
+
         return null;
     }
 
     private TestCase extractExceptionTest(String testSection) {
         Pattern pattern = Pattern.compile(
-                "### 예외 테스트\\s*-\\s*입력:\\s*(.+?)(?=##|$)",
-                Pattern.DOTALL
+                "(###?\\s*예외\\s*테스트|예외 테스트)\\s*-\\s*입력[:\\s]*(.+?)(?=(###?|$))",
+                Pattern.DOTALL | Pattern.CASE_INSENSITIVE
         );
         Matcher matcher = pattern.matcher(testSection);
         if (matcher.find()) {
-            String input = matcher.group(1).trim();
+            String input = cleanTestValue(matcher.group(2).trim());
             return new TestCase("예외_테스트", "예외 테스트", input, "", true);
         }
         return null;
+    }
+
+    private String cleanTestValue(String value) {
+        value = value.replaceAll("```[a-z]*\\n?", "").replaceAll("```", "");
+        value = value.replaceAll("`", "");
+        value = value.replaceAll("\\([^)]+\\)", "");
+        if (value.contains("- 출력:") || value.contains("-출력:")) {
+            value = value.split("-\\s*출력:", 2)[0];
+        }
+        if (value.contains("---")) {
+            value = value.split("---", 2)[0];
+        }
+        String[] lines = value.split("\n");
+        value = lines[0].trim();
+        return value;
     }
 }
