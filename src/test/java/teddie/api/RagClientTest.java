@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import teddie.api.dto.RagResult;
+import teddie.common.config.ApiConfig;
 import teddie.common.util.HttpRequestSender;
 
 public class RagClientTest {
@@ -16,7 +17,8 @@ public class RagClientTest {
     @Test
     void RagClient_생성() {
         //given
-        HttpRequestSender sender = new HttpRequestSender();
+        ApiConfig mockConfig = mock(ApiConfig.class);
+        HttpRequestSender sender = new HttpRequestSender(mockConfig);
 
         //when
         RagClient ragClient = new RagClient(sender);
@@ -27,7 +29,7 @@ public class RagClientTest {
 
     @DisplayName("빈 결과 리스트를 반환")
     @Test
-    void 빈_결과_리스트를_반화() throws Exception {
+    void 빈_결과_리스트를_반환() {
         //given
         HttpRequestSender mockSender = mock(HttpRequestSender.class);
         String responseJson = """
@@ -36,7 +38,7 @@ public class RagClientTest {
                 "results": []
             }
             """;
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToRagApi(anyString()))
                 .thenReturn(responseJson);
         RagClient ragClient = new RagClient(mockSender);
 
@@ -50,7 +52,7 @@ public class RagClientTest {
 
     @DisplayName("검색 결과 1개를 파싱하여 변환")
     @Test
-    void 검색_결과_1개를_파싱하여_변환() throws Exception {
+    void 검색_결과_1개를_파싱하여_변환() {
         //given
         HttpRequestSender mockSender = mock(HttpRequestSender.class);
         String responseJson = """
@@ -66,7 +68,7 @@ public class RagClientTest {
                     ]
                 }
                 """;
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToRagApi(anyString()))
                 .thenReturn(responseJson);
         RagClient ragClient = new RagClient(mockSender);
 
@@ -82,7 +84,7 @@ public class RagClientTest {
 
     @DisplayName("검색 결과 여러 개를 파싱하여 반환")
     @Test
-    void 검색_결과_여러_개를_파싱하여_반환() throws Exception {
+    void 검색_결과_여러_개를_파싱하여_반환() {
         //given
         HttpRequestSender mockSender = mock(HttpRequestSender.class);
         String responseJson = """
@@ -110,7 +112,7 @@ public class RagClientTest {
                 ]
             }
             """;
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToRagApi(anyString()))
                 .thenReturn(responseJson);
         RagClient ragClient = new RagClient(mockSender);
 

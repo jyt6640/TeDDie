@@ -30,9 +30,8 @@ public class MissionService {
         List<RagResult> ragResults = ragClient.search(topic.getValue(), 3);
         UserPrompt userPrompt = new UserPrompt(topic, difficulty, ragResults);
         String requestJson = builder.createJSONBody(SYSTEM_PROMPT, userPrompt.getContent());
-        String responseJson = sender.post("http://localhost:1234/v1/chat/completions", requestJson);
+        String responseJson = sender.postToLmStudio(requestJson);
         String content = parseContentFromResponse(responseJson);
-
         return parseToMissionResponse(content);
     }
 
@@ -77,7 +76,6 @@ public class MissionService {
             String output = cleanTestValue(matcher.group(3).trim());
             return new TestCase("기능_테스트", "기능 테스트", input, output, false);
         }
-
         return null;
     }
 

@@ -52,12 +52,12 @@ public class MissionServiceTest {
                 }
                 """;
 
-        //when
         when(mockRequestBody.createJSONBody(anyString(), anyString()))
                 .thenReturn("{\"promt\":\"...\"}");
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToLmStudio(anyString()))  // ✅ 변경
                 .thenReturn(testResponse);
 
+        //when
         MissionResponse response = missionService.generateMission(topic, difficulty);
 
         //then
@@ -77,7 +77,7 @@ public class MissionServiceTest {
                 { "choices": [{"message": {"content": "Test Content"}}]}
                 """;
 
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToLmStudio(anyString()))  // ✅ 변경
                 .thenReturn(testResponse);
 
         ArgumentCaptor<String> systemPromptCaptor = ArgumentCaptor.forClass(String.class);
@@ -98,7 +98,7 @@ public class MissionServiceTest {
         assertThat(actualUserPrompt).contains("주제");
     }
 
-    @DisplayName("RAG 검색 결과를 시스템 프롬프트에_포함")
+    @DisplayName("RAG 검색 결과를 시스템 프롬프트에 포함")
     @Test
     void RAG_검색_결과를_시스템_프롬프트에_포함() {
         //given
@@ -121,7 +121,7 @@ public class MissionServiceTest {
         String testResponse = """
             {"choices":[{"message":{"content":"생성된 미션"}}]}
             """;
-        when(mockSender.post(anyString(), anyString()))
+        when(mockSender.postToLmStudio(anyString()))  // ✅ 변경
                 .thenReturn(testResponse);
 
         //when
@@ -156,7 +156,7 @@ public class MissionServiceTest {
 
         when(mockRagClient.search(anyString(), anyInt())).thenReturn(List.of());
         when(mockRequestBody.createJSONBody(anyString(), anyString())).thenReturn("{\"prompt\":\"...\"}");
-        when(mockSender.post(anyString(), anyString())).thenReturn(testResponse);
+        when(mockSender.postToLmStudio(anyString())).thenReturn(testResponse);  // ✅ 변경
 
         //when
         MissionResponse response = missionService.generateMission(topic, difficulty);

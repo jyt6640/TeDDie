@@ -1,5 +1,6 @@
 package teddie.common.util;
 
+import teddie.common.config.ApiConfig;
 import teddie.exception.HttpRequestException;
 import java.io.IOException;
 import java.net.URI;
@@ -13,15 +14,25 @@ public class HttpRequestSender {
     private static final String HEADER_APPLICATION_JSON = "application/json";
 
     private final HttpClient httpClient;
+    private final ApiConfig apiConfig;
 
-    public HttpRequestSender() {
+    public HttpRequestSender(ApiConfig apiConfig) {
         this.httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        this.apiConfig = apiConfig;
     }
 
-    public String post(String url, String requestBody) {
+    public String postToLmStudio(String requestBody) {
+        return post(apiConfig.getLmStudioUrl(), requestBody);
+    }
+
+    public String postToRagApi(String requestBody) {
+        return post(apiConfig.getRagApiUrl(), requestBody);
+    }
+
+    private String post(String url, String requestBody) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))

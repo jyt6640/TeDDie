@@ -9,7 +9,6 @@ import teddie.api.dto.RagResult;
 import teddie.common.util.HttpRequestSender;
 
 public class RagClient {
-    private static final String RAG_API_URL = "http://localhost:8000/api/search";
     private static final String QUERY = "query";
     private static final String TOP_K = "top_k";
     private static final String RESULTS = "results";
@@ -28,7 +27,7 @@ public class RagClient {
 
     public List<RagResult> search(String query, int topK) {
         String requestBody = buildSearchRequest(query, topK);
-        String responseJson = sender.post(RAG_API_URL, requestBody);
+        String responseJson = sender.postToRagApi(requestBody);
         return parseSearchResponse(responseJson);
     }
 

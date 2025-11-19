@@ -18,12 +18,18 @@ import teddie.api.RagClient;
 import teddie.service.RequestBodyBuilder;
 
 public class AppConfig {
+    private final ApiConfig apiConfig;
+
+    public AppConfig() {
+        this.apiConfig = new ApiConfig();
+    }
+
     public OutputView outputView() {
         return new ConsoleView();
     }
 
     public HttpRequestSender httpRequestSender() {
-        return new HttpRequestSender();
+        return new HttpRequestSender(apiConfig);
     }
 
     public RagClient ragClient() {
